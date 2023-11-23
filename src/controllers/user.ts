@@ -6,16 +6,15 @@ abstract class UserController {
 		// VALIDAR DATOS CON ZOD
 		const validatedData = req.body;
 
-		console.log(req.body);
-
 		const response = await UserModel.createNew(validatedData);
 		return res.status(201).json(response);
 	}
 
-	static async getAll(req: Request, res: Response) {
-		const users = await UserModel.getAll();
+	static async getInfo(req: Request, res: Response) {
+		const { userId } = req.params;
+		const user = await UserModel.getInfo(userId);
 
-		return res.json({ users });
+		return res.json(user);
 	}
 }
 
