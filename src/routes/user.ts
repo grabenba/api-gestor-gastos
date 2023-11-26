@@ -1,23 +1,16 @@
 import { Router } from 'express';
 import UserController from '../controllers/user';
 import MovementController from '../controllers/movement';
+import { authorizeUser } from '../middlewares/token-validator';
 
 const userRouter = Router();
 
-// /v1/api/users
-
-// REGISTRAR NUEVO USUARIO
-// ENDPOINT PUBLICO
 userRouter.post('/', UserController.createNew);
+userRouter.post('/auth/token', UserController.login);
 
-// RETORNAR TODA LA INDO PERSONAL DE UN USUARIO
-// NECESARIO AUTH
-userRouter.get('/:userId', UserController.getInfo);
-
-// CREAR U OBTEBER MOVIMIENTOS DE UN USAURIO
-// NECESARIO AUTH
-userRouter.get('/:userId/movements', MovementController.getAll);
-userRouter.post('/:userId/movements', MovementController.createNew);
+userRouter.get('/:userId', authorizeUser, UserController.getInfo);
+userRouter.get('/:userId/movements', authorizeUser, MovementController.getAll);
+userRouter.post('/:userId/movements',authorizeUser, MovementController.createNew);
 
 userRouter.use('*', (req, res) =>
 	res.status(404).json({ error: 'Resource not found' })

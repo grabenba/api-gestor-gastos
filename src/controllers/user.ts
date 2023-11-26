@@ -16,6 +16,13 @@ abstract class UserController {
 
 		return res.json(user);
 	}
+
+	static async login(req: Request, res: Response) {
+		const { email, password } = req.body;  // VALIDAR CON ZOD
+		const user = await UserModel.login({ email, password});
+
+		return res.json(user);
+	}
 }
 
 export default UserController;
