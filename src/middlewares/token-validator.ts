@@ -8,12 +8,17 @@ const authorizeUser = (req: Request, res: Response, next: NextFunction) => {
   if (!authorization)
     return res.status(401).json({ message: "Nothing to do over here.." });
 
-  const result = verifyToken(authorization) as any;
+  const token = authorization.split(' ')[1];  // el [0] es 'bearer'
 
-  if (result.error)
+  const validatedToken = verifyToken(token) as any;
+
+  if (validatedToken.error)
      return res.status(401).json({ message: "Nothing to do over here.." });
 
+  const { email, userId} = validatedToken;
 
+  res.locals.userData = { email, userId};
+  
   next();
 };
 
