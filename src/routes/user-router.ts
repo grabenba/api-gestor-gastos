@@ -11,11 +11,8 @@ userRouter.post("/auth/token", UserController.login);
 
 userRouter.get("/me", authorizeUser, UserController.getInfo);
 userRouter.get("/me/movements", authorizeUser, MovementController.getAll);
-userRouter.post(
-  "/me/movements",
-  authorizeUser,
-  MovementController.createNew
-);
+userRouter.post("/me/movements", authorizeUser,  MovementController.createNew);
+
 userRouter.post("/", handle405Error);
 userRouter.post("/auth/token", handle405Error);
 userRouter.post("/me", handle405Error);

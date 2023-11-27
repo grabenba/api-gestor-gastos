@@ -11,6 +11,6 @@ app.use(logRequest);
 
 app.use("/v1/api", mainRouter);
 
-app.use("/", handle404Error);
+app.use("*", handle404Error);
 
 export default app;
