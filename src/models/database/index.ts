@@ -1,11 +1,11 @@
 import { initializeApp, cert } from 'firebase-admin/app';
 import { getFirestore } from 'firebase-admin/firestore';
+import { ADMIN_SKD } from '../../constants';
 
-import serviceAccount from './adminsdk.json';
-
+// Método para inicializar la App FIRESTORE
 initializeApp({
-	credential: cert(serviceAccount as any),
-});
+	credential: cert(ADMIN_SKD),
+});   
 
 const firestore = getFirestore();
 

@@ -1,30 +1,38 @@
-import { Request, Response } from 'express';
-import UserModel from '../models/user';
+import { Request, Response } from "express";
+import UserModel from "../models/user";
+import { validateUser, validatePartialUser } from "../schemas/user";
 
 abstract class UserController {
-	static async createNew(req: Request, res: Response) {
-		// VALIDAR DATOS CON ZOD
-		const validatedData = req.body;
+  static async createNew(req: Request, res: Response) {
 
-		const response = await UserModel.createNew(validatedData);
-		return res.status(201).json(response);
-	}
+    const validatedData = validateUser(req.body);
 
-	static async getInfo(req: Request, res: Response) {
-		//console.log(res.locals.userData);
-		
-		const { userId } = res.locals.userData;
-		const user = await UserModel.getInfo(userId);
+    if (!validatedData.success)
+      return res.status(400).json(validatedData.error);
 
-		return res.json(user);
-	}
+    const response = await UserModel.createNew(validatedData.data);
+    return res.status(201).json(response);
+  }
 
-	static async login(req: Request, res: Response) {
-		const { email, password } = req.body;  // VALIDAR CON ZOD
-		const user = await UserModel.login({ email, password});
+  static async getInfo(req: Request, res: Response) {
+  
+    const { userId } = res.locals.userData;
+    const user = await UserModel.getInfo(userId);
 
-		return res.json(user);
-	}
+    return res.json(user);
+  }
+
+  static async login(req: Request, res: Response) {
+	const validatedData = validatePartialUser(req.body);
+
+	if (!validatedData.success)
+		return res.status(400).json(validatedData.error);
+
+	const { email, password } = validatedData.data as any;
+	const user = await UserModel.login({ email, password });
+
+	return res.json(user);
+}
 }
 
 export default UserController;
